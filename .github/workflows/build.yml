@@ -58,7 +58,7 @@ jobs:
         working-directory: apps/desktop
         run: |
           pnpm -w cap-setup
-          pnpm build:tauri --ci --target x86_64-pc-windows-msvc
+          pnpm build:tauri --ci --target x86_64-pc-windows-msvc --config src-tauri/tauri.prod.conf.json
         env:
           CI: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
