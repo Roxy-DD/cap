@@ -507,7 +507,6 @@ import {
 } from "@tauri-apps/api/webviewWindow";
 import * as dialog from "@tauri-apps/plugin-dialog";
 import { type as ostype, platform } from "@tauri-apps/plugin-os";
-import * as updater from "@tauri-apps/plugin-updater";
 import { Transition } from "solid-transition-group";
 import { SignInButton } from "~/components/SignInButton";
 import { authStore, generalSettingsStore } from "~/store";
@@ -523,29 +522,9 @@ import {
 	useRecordingOptions,
 } from "./OptionsContext";
 
-let hasChecked = false;
+// 离线版：已禁用自动更新检查
 function createUpdateCheck() {
-	if (import.meta.env.DEV) return;
-
-	const navigate = useNavigate();
-
-	onMount(async () => {
-		if (hasChecked) return;
-		hasChecked = true;
-
-		await new Promise((res) => setTimeout(res, 1000));
-
-		const update = await updater.check();
-		if (!update) return;
-
-		const shouldUpdate = await dialog.confirm(
-			`Version ${update.version} of Cap is available, would you like to install it?`,
-			{ title: "Update Cap", okLabel: "Update", cancelLabel: "Ignore" },
-		);
-
-		if (!shouldUpdate) return;
-		navigate("/update");
-	});
+	// 离线版不需要更新检查
 }
 
 function AreaSelectButton(props: {

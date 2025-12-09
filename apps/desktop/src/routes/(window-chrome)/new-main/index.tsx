@@ -14,7 +14,6 @@ import {
 } from "@tauri-apps/api/window";
 import * as dialog from "@tauri-apps/plugin-dialog";
 import { type as ostype } from "@tauri-apps/plugin-os";
-import * as updater from "@tauri-apps/plugin-updater";
 import { cx } from "cva";
 import {
 	createEffect,
@@ -129,15 +128,15 @@ const createDisplaySignature = (
 
 type TargetMenuPanelProps =
 	| {
-			variant: "display";
-			targets?: CaptureDisplayWithThumbnail[];
-			onSelect: (target: CaptureDisplayWithThumbnail) => void;
-	  }
+		variant: "display";
+		targets?: CaptureDisplayWithThumbnail[];
+		onSelect: (target: CaptureDisplayWithThumbnail) => void;
+	}
 	| {
-			variant: "window";
-			targets?: CaptureWindowWithThumbnail[];
-			onSelect: (target: CaptureWindowWithThumbnail) => void;
-	  };
+		variant: "window";
+		targets?: CaptureWindowWithThumbnail[];
+		onSelect: (target: CaptureWindowWithThumbnail) => void;
+	};
 
 type SharedTargetMenuProps = {
 	isLoading: boolean;
@@ -273,29 +272,9 @@ export default function () {
 	);
 }
 
-let hasChecked = false;
+// 离线版：已禁用自动更新检查
 function createUpdateCheck() {
-	if (import.meta.env.DEV) return;
-
-	const navigate = useNavigate();
-
-	onMount(async () => {
-		if (hasChecked) return;
-		hasChecked = true;
-
-		await new Promise((res) => setTimeout(res, 1000));
-
-		const update = await updater.check();
-		if (!update) return;
-
-		const shouldUpdate = await dialog.confirm(
-			`Version ${update.version} of Cap is available, would you like to install it?`,
-			{ title: "Update Cap", okLabel: "Update", cancelLabel: "Ignore" },
-		);
-
-		if (!shouldUpdate) return;
-		navigate("/update");
-	});
+	// 离线版不需要更新检查
 }
 
 function Page() {
@@ -639,7 +618,7 @@ function Page() {
 						class={cx(
 							"flex flex-1 overflow-hidden rounded-lg bg-gray-3 ring-1 ring-transparent ring-offset-2 ring-offset-gray-1 transition focus-within:ring-blue-9 focus-within:ring-offset-2 focus-within:ring-offset-gray-1",
 							(rawOptions.targetMode === "display" || displayMenuOpen()) &&
-								"ring-blue-9",
+							"ring-blue-9",
 						)}
 					>
 						<TargetTypeButton
@@ -684,7 +663,7 @@ function Page() {
 						class={cx(
 							"flex flex-1 overflow-hidden rounded-lg bg-gray-3 ring-1 ring-transparent ring-offset-2 ring-offset-gray-1 transition focus-within:ring-blue-9 focus-within:ring-offset-2 focus-within:ring-offset-gray-1",
 							(rawOptions.targetMode === "window" || windowMenuOpen()) &&
-								"ring-blue-9",
+							"ring-blue-9",
 						)}
 					>
 						<TargetTypeButton
@@ -752,7 +731,7 @@ function Page() {
 			}
 		}
 
-		await signIn.mutateAsync(abort).catch(() => {});
+		await signIn.mutateAsync(abort).catch(() => { });
 
 		for (const win of await getAllWebviewWindows()) {
 			if (win.label.startsWith("target-select-overlay")) {
@@ -764,9 +743,8 @@ function Page() {
 
 	return (
 		<div
-			class={`flex relative ${
-				displayMenuOpen() || windowMenuOpen() ? "" : "justify-center"
-			} flex-col px-3 gap-2 h-full text-[--text-primary]`}
+			class={`flex relative ${displayMenuOpen() || windowMenuOpen() ? "" : "justify-center"
+				} flex-col px-3 gap-2 h-full text-[--text-primary]`}
 		>
 			<WindowChromeHeader hideMaximize>
 				<div
