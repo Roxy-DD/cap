@@ -58,10 +58,11 @@ jobs:
         working-directory: apps/desktop
         run: |
           pnpm -w cap-setup
-          pnpm build:tauri --target x86_64-pc-windows-msvc
+          pnpm build:tauri --ci --target x86_64-pc-windows-msvc
         env:
           CI: false
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          TAURI_CLI_NO_DEV_WARNINGS: true
 
       - name: List build artifacts
         run: |
