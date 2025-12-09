@@ -74,6 +74,7 @@ jobs:
         with:
           files: |
             apps/desktop/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/nsis/*.exe
+            apps/desktop/src-tauri/target/x86_64-pc-windows-msvc/release/bundle/msi/*.msi
           draft: false
           prerelease: false
         env:
